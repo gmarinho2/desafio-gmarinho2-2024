@@ -21,10 +21,10 @@ Sua missão será construir a lógica para indicar os recintos onde novos animai
 
   | número    | bioma             | tamanho total |  animais existentes |
   |-----------|-------------------|---------------|---------------------|
-  | 1         | savana            |   10          |   3 macacos         |nao hipo, nao tolera diferentes sem rio
+  | 1         | savana            |   10          |   3 macacos         |
   | 2         | floresta          |    5          |   vazio             |
-  | 3         | savana e rio      |    7          |  1 gazela           |hipo falta 0
-  | 4         | rio               |    8          |   vazio             |hipo
+  | 3         | savana e rio      |    7          |  1 gazela           |
+  | 4         | rio               |    8          |   vazio             |
   | 5         | savana            |    9          |  1 leão             |
 
 ### ANIMAIS
