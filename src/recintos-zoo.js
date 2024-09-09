@@ -8,10 +8,9 @@ class Animal{
 
     //ve se cabe no recinto e se pode por ser ou nao carnivoro
     verificaSituacao(recinto, quantidade){
-        //ve se a interseção de biomas é vazia
         const biomas_aceitos = new Set(this.biomas);
         const biomas_disponiveis = new Set(recinto.Biomas);
-        const intersecao = new Set([...biomas_disponiveis].filter(i => biomas_aceitos.has(i)));
+        const intersecao = new Set([...biomas_aceitos].filter(i => biomas_disponiveis.has(i)));
         if(intersecao.size==0){
             return false;
         }
@@ -30,7 +29,6 @@ class Animal{
         for(let animal of recinto.Animais){
             tamanho_final = tamanho_final - animal.tamanho;
         }
-
 
         tamanho_final = tamanho_final - quantidade * this.tamanho;
 
@@ -62,6 +60,7 @@ class Macaco extends Animal{
     constructor(){
         super("MACACO", 1, false, ["savana", "floresta"])
     }
+
     //verifica se terá companhia:
     verificaSituacao(recinto, quantidade){
         if(!super.verificaSituacao(recinto, quantidade)){
@@ -82,11 +81,19 @@ class Hipopotamo extends Animal {
     }
     //verifica se tem outra especie, se tiver tem que estar no rio
     verificaSituacao(recinto, quantidade){
-        super.verificaSituacao(recinto, quantidade); //para usar a funcao de animal
-        
-        //implemetnar
+        if(!super.verificaSituacao(recinto, quantidade)){
+            return false;
+        }
+        let recinto_biomas = new Set(recinto.Biomas);
+        for(let animal of recinto.Animais){
+            if((animal.nome!=this.animais) && (!recinto_biomas.has("rio"))){
+                return false;
+            }
+        }
+        return true;
     }
 }
+
 
 class RecintosZoo {
     constructor(){
@@ -110,11 +117,16 @@ class RecintosZoo {
 
     analisaRecintos(nome_animal, quantidade) {
         const animal_atual = this.animais[nome_animal];
-        if(quantidade <= 0){
-            return {erro: "Quantidade inválida"};
+
+        if(!(quantidade % 1 == 0) || quantidade <= 0){
+            return {
+                erro: "Quantidade inválida"
+            };
         }
         if(!animal_atual){
-            return {erro: "Animal inválido"};
+            return {
+                erro: "Animal inválido"
+            };
         }
 
         const recintosViaveis = []
@@ -131,18 +143,22 @@ class RecintosZoo {
                     tamanho_ocupado = this.recintos[recinto].Animais.reduce((acumulador, animal)=>acumulador+animal.tamanho, 0); 
                 }
                 const restante = this.recintos[recinto].Tamanho - tamanho_ocupado - (animal_atual.tamanho * quantidade);
-                
                 recintosViaveis.push(`Recinto ${recinto} (espaço livre: ${restante} total: ${this.recintos[recinto].Tamanho})`);
             }
         }
 
         if(recintosViaveis.length > 0){
-            return {recintosViaveis};
+            return {
+                recintosViaveis
+            };
         }
-        return {erro: "Não há recinto viável"};
+        return {
+            erro: "Não há recinto viável"
+        };
     }
 }
 
 export { RecintosZoo as RecintosZoo };
 
-console.log(new RecintosZoo().analisaRecintos('MACACO', 10));
+const resultado = new RecintosZoo().analisaRecintos('HIPOPOTAMO', 1);
+console.log(resultado);
