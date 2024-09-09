@@ -11,7 +11,7 @@ class Animal{
         const biomas_aceitos = new Set(this.biomas);
         const biomas_disponiveis = new Set(recinto.Biomas);
         const intersecao = new Set([...biomas_aceitos].filter(i => biomas_disponiveis.has(i)));
-        if(intersecao.size==0){
+        if(intersecao.size===0){
             return false;
         }
 
@@ -60,16 +60,13 @@ class Macaco extends Animal{
     constructor(){
         super("MACACO", 1, false, ["savana", "floresta"])
     }
-
     //verifica se terá companhia:
     verificaSituacao(recinto, quantidade){
         if(!super.verificaSituacao(recinto, quantidade)){
             return false;
         }
-        if(quantidade<2){
-            if(recinto.Animais.length<1){
-                return false;
-            }
+        if(quantidade<2 && recinto.Animais.length<1){
+            return false;
         }
         return true;
     }
@@ -84,7 +81,7 @@ class Hipopotamo extends Animal {
         if(!super.verificaSituacao(recinto, quantidade)){
             return false;
         }
-        let recinto_biomas = new Set(recinto.Biomas);
+        const recinto_biomas = new Set(recinto.Biomas);
         for(let animal of recinto.Animais){
             if((animal.nome!=this.animais) && (!recinto_biomas.has("rio"))){
                 return false;
@@ -94,16 +91,15 @@ class Hipopotamo extends Animal {
     }
 }
 
-
 class RecintosZoo {
     constructor(){
         this.animais = {    
                             "LEAO": new Animal("LEAO", 3, true, ["savana"]),
                             "LEOPARDO": new Animal("LEOPARDO", 2, true, ["savana"]),
                             "CROCODILO": new Animal("CROCODILO", 3, true, ["rio"]),
-                            "MACACO": new Macaco(),//("MACACO", 1, false, ["savana", "floresta"]),
+                            "MACACO": new Macaco(),
                             "GAZELA": new Animal("GAZELA", 2, false, ["savana"]),
-                            "HIPOPOTAMO": new Hipopotamo()//("HIPOPOTAMO", 3, false, ["savana", "rio"])
+                            "HIPOPOTAMO": new Hipopotamo()
                         }
 
         this.recintos = {
@@ -117,7 +113,6 @@ class RecintosZoo {
 
     analisaRecintos(nome_animal, quantidade) {
         const animal_atual = this.animais[nome_animal];
-
         if(!(quantidade % 1 == 0) || quantidade <= 0){
             return {
                 erro: "Quantidade inválida"
@@ -130,20 +125,21 @@ class RecintosZoo {
         }
 
         const recintosViaveis = []
-
         for(const recinto in this.recintos){
             const viavel = animal_atual.verificaSituacao(this.recintos[recinto], quantidade);
+
             if(viavel){
-                let tamanho_ocupado = 0;
+                let ocupado = 0;
                 for(let animal of this.recintos[recinto].Animais){
                     if(animal_atual.nome!=animal.nome){
-                        tamanho_ocupado = this.recintos[recinto].Animais.reduce((acumulador, animal)=>acumulador+animal.tamanho, 0) + 1;
+                        ocupado = this.recintos[recinto].Animais.reduce((acumulador, animal)=>acumulador+animal.tamanho, 0) + 1;
                         break;
                     }
-                    tamanho_ocupado = this.recintos[recinto].Animais.reduce((acumulador, animal)=>acumulador+animal.tamanho, 0); 
+                    ocupado = this.recintos[recinto].Animais.reduce((acumulador, animal)=>acumulador+animal.tamanho, 0); 
                 }
-                const restante = this.recintos[recinto].Tamanho - tamanho_ocupado - (animal_atual.tamanho * quantidade);
-                recintosViaveis.push(`Recinto ${recinto} (espaço livre: ${restante} total: ${this.recintos[recinto].Tamanho})`);
+                const total = this.recintos[recinto].Tamanho;
+                const livre = total - ocupado - (animal_atual.tamanho * quantidade);
+                recintosViaveis.push(`Recinto ${recinto} (espaço livre: ${livre} total: ${total})`);
             }
         }
 
@@ -159,6 +155,3 @@ class RecintosZoo {
 }
 
 export { RecintosZoo as RecintosZoo };
-
-const resultado = new RecintosZoo().analisaRecintos('HIPOPOTAMO', 1);
-console.log(resultado);
