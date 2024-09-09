@@ -37,5 +37,43 @@ describe('Recintos do Zoologico', () => {
         expect(resultado.recintosViaveis.length).toBe(3);
     });
 
-});
+    //TESTES ADICIONAIS
 
+
+    test('Deve rejeitar quantidade inválida', () => {
+        const resultado = new RecintosZoo().analisaRecintos('MACACO', -1);
+        expect(resultado.erro).toBe("Quantidade inválida");
+        expect(resultado.recintosViaveis).toBeFalsy();
+    });
+
+    test('Deve rejeitar quantidade inválida', () => {
+        const resultado = new RecintosZoo().analisaRecintos('MACACO', 'a');
+        expect(resultado.erro).toBe("Quantidade inválida");
+        expect(resultado.recintosViaveis).toBeFalsy();
+    });
+
+    test('Deve rejeitar animal inválidao', () => {
+        const resultado = new RecintosZoo().analisaRecintos(1, 1);
+        expect(resultado.erro).toBe("Quantidade inválida");
+        expect(resultado.recintosViaveis).toBeFalsy();
+    });
+
+    test('Deve encontrar recinto para 1 leão', () => {
+        const resultado = new RecintosZoo().analisaRecintos('LEAO', 1);
+        expect(resultado.erro).toBeFalsy();
+        expect(resultado.recintosViaveis[0]).toBe('Recinto 2 (espaço livre: 7 total: 10)');
+        expect(resultado.recintosViaveis[1]).toBe('Recinto 4 (espaço livre: 2 total: 5)');
+        expect(resultado.recintosViaveis[2]).toBe('Recinto 5 (espaço livre: 3 total: 9)');
+        expect(resultado.recintosViaveis.length).toBe(3);
+    });
+
+    test('Deve encontrar recintos para 5 macacos', () => {
+
+        const resultado = new RecintosZoo().analisaRecintos('MACACO', 5);
+        expect(resultado.erro).toBeFalsy();
+        expect(resultado.recintosViaveis[0]).toBe('Recinto 1 (espaço livre: 2 total: 10)');
+        expect(resultado.recintosViaveis[1]).toBe('Recinto 2 (espaço livre: 3 total: 5)');
+        expect(resultado.recintosViaveis.length).toBe(2);
+    });
+
+});
